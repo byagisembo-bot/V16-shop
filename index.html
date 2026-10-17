@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V16 Shop - ONLINE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#f5f5f5}
+.login-wrap{height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:white;padding:30px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);width:90%;max-width:380px}
+h1{text-align:center;margin-bottom:20px;color:#111}
+input{width:100%;padding:14px;margin:8px 0;border:1px solid #ddd;border-radius:10px;font-size:16px}
+button{width:100%;padding:14px;background:#000;color:#fff;border:none;border-radius:10px;font-size:16px;margin-top:10px;cursor:pointer}
+#app{display:none;padding:15px}
+.header{display:flex;justify-content:space-between;align-items:center;background:white;padding:12px 15px;border-radius:12px;margin-bottom:15px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:white;padding:15px;border-radius:12px}
+.pos{background:white;padding:15px;border-radius:12px;margin-top:15px}
+.sale-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}
+</style>
+</head>
+<body>
+<div id="login" class="login-wrap">
+  <div class="card">
+    <h1>V16 SHOP</h1>
+    <input id="uid" placeholder="ID" value="211">
+    <input id="pwd" type="password" placeholder="Password" value="211">
+    <button onclick="login()">Injira</button>
+    <p id="msg" style="color:red;text-align:center;margin-top:10px;font-size:13px"></p>
+    <div style="margin-top:15px;background:#f9f9f9;padding:10px;border-radius:8px;font-size:12px">Login: admin/1234 na 211/211</div>
+  </div>
+</div>
+<div id="app">
+  <div class="header"><b>V16 SHOP ONLINE</b><span id="userBadge"></span><button onclick="logout()" style="width:auto;padding:6px 12px;font-size:12px;margin:0">Sohoka</button></div>
+  <div class="grid"><div class="stat"><h3>UYU MUNSI</h3><b id="todaySales">0</b></div><div class="stat"><h3>BYOSE</h3><b id="totalSales">0</b></div></div>
+  <div class="pos"><h2>Kugurisha</h2><input id="pname" placeholder="Izina"><input id="pprice" type="number" placeholder="Igiciro"><button onclick="addSale()">Bika</button><div id="salesList" style="margin-top:15px"></div></div>
+</div>
+<script>
+const users=[{id:'admin',password:'1234'},{id:'211',password:'211'}];
+let sales=JSON.parse(localStorage.getItem('v16_sales')||'[]');
+function login(){const id=document.getElementById('uid').value.trim();const pw=document.getElementById('pwd').value.trim();const ok=users.find(u=>u.id===id&&u.password===pw);if(ok){localStorage.setItem('v16_user',id);showApp(id);}else{document.getElementById('msg').innerText='ID cyangwa password siyo!';}}
+function showApp(id){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';document.getElementById('userBadge').innerText=id;render();}
+function logout(){localStorage.removeItem('v16_user');location.reload();}
+function addSale(){const n=document.getElementById('pname').value;const p=parseInt(document.getElementById('pprice').value);if(!n||!p)return alert('Shyiramo izina');sales.unshift({name:n,price:p,time:new Date().toLocaleString()});localStorage.setItem('v16_sales',JSON.stringify(sales));document.getElementById('pname').value='';document.getElementById('pprice').value='';render();}
+function render(){let total=0;sales.forEach(s=>total+=s.price);document.getElementById('todaySales').innerText=total+' RWF';document.getElementById('totalSales').innerText=sales.length;document.getElementById('salesList').innerHTML=sales.map(s=>`<div class="sale-item"><span>${s.name} <small>${s.time}</small></span><b>${s.price}</b></div>`).join('');}
+if(localStorage.getItem('v16_user'))showApp(localStorage.getItem('v16_user'));
+</script>
+</body>
+</html>
