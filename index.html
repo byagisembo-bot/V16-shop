@@ -1,1 +1,141 @@
-<!DOCTYPE html> <html lang="rw"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>V16 Shop - ONLINE</title> <style> *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui} body{background:#f5f5f5} .login-wrap{height:100vh;display:flex;align-items:center;justify-content:center} .card{background:white;padding:30px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);width:90%;max-width:380px} h1{text-align:center;margin-bottom:20px;color:#111} input{width:100%;padding:14px;margin:8px 0;border:1px solid #ddd;border-radius:10px;font-size:16px} button{width:100%;padding:14px;background:#000;color:#fff;border:none;border-radius:10px;font-size:16px;margin-top:10px;cursor:pointer} #app{display:none;padding:15px} .header{display:flex;justify-content:space-between;align-items:center;background:white;padding:12px 15px;border-radius:12px;margin-bottom:15px} .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px} .stat{background:white;padding:15px;border-radius:12px} .pos{background:white;padding:15px;border-radius:12px;margin-top:15px} .sale-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee} </style> </head> <body> <div id="login" class="login-wrap"> <div class="card"> <h1>V16 SHOP</h1> <input id="uid" placeholder="ID" value="211"> <input id="pwd" type="password" placeholder="Password" value="211"> <button onclick="login()">Injira</button> <p id="msg" style="color:red;text-align:center;margin-top:10px;font-size:13px"></p> <div style="margin-top:15px;background:#f9f9f9;padding:10px;border-radius:8px;font-size:12px">Login: admin/1234 na 211/211</div> </div> </div> <div id="app"> <div class="header"><b>V16 SHOP ONLINE</b><span id="userBadge"></span><button onclick="logout()" style="width:auto;padding:6px 12px;font-size:12px;margin:0">Sohoka</button></div> <div class="grid"><div class="stat"><h3>UYU MUNSI</h3><b id="todaySales">0</b></div><div class="stat"><h3>BYOSE</h3><b id="totalSales">0</b></div></div> <div class="pos"><h2>Kugurisha</h2><input id="pname" placeholder="Izina"><input id="pprice" type="number" placeholder="Igiciro"><button onclick="addSale()">Bika</button><div id="salesList" style="margin-top:15px"></div></div> </div> <script> const users=[{id:'admin',password:'1234'},{id:'211',password:'211'}]; let sales=JSON.parse(localStorage.getItem('v16_sales')||'[]'); function login(){const id=document.getElementById('uid').value.trim();const pw=document.getElementById('pwd').value.trim();const ok=users.find(u=>u.id===id&&u.password===pw);if(ok){localStorage.setItem('v16_user',id);showApp(id);}else{document.getElementById('msg').innerText='ID cyangwa password siyo!';}} function showApp(id){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';document.getElementById('userBadge').innerText=id;render();} function logout(){localStorage.removeItem('v16_user');location.reload();} function addSale(){const n=document.getElementById('pname').value;const p=parseInt(document.getElementById('pprice').value);if(!n||!p)return alert('Shyiramo izina');sales.unshift({name:n,price:p,time:new Date().toLocaleString()});localStorage.setItem('v16_sales',JSON.stringify(sales));document.getElementById('pname').value='';document.getElementById('pprice').value='';render();} function render(){let total=0;sales.forEach(s=>total+=s.price);document.getElementById('todaySales').innerText=total+' RWF';document.getElementById('totalSales').innerText=sales.length;document.getElementById('salesList').innerHTML=sales.map(s=>`<div class="sale-item"><span>${s.name} <small>${s.time}</small></span><b>${s.price}</b></div>`).join('');} if(localStorage.getItem('v16_user'))showApp(localStorage.getItem('v16_user')); </script> </body> </html>
+
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V16 SHOP - Admin Only Control</title>
+<style>
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{margin:0;background:#f5f5f7;display:flex;justify-content:center;min-height:100vh}
+.card{background:white;width:100%;max-width:420px;margin:20px;padding:28px 22px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+h1{font-size:34px;text-align:center;margin:10px 0 28px;font-weight:900;letter-spacing:1px}
+input{width:100%;padding:16px 18px;border:2px solid #e5e5e5;border-radius:14px;font-size:18px;outline:none;margin-bottom:14px}
+input:focus{border-color:#000}
+.btn{width:100%;padding:16px;background:#000;color:#fff;border:none;border-radius:14px;font-size:19px;font-weight:700;cursor:pointer}
+.btn:active{transform:scale(.98)}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:800}
+.badge-admin{background:#000;color:#fff}
+.badge-user{background:#e8e8e8;color:#222}
+.logout{font-size:14px;color:#ff3b30;cursor:pointer;font-weight:700}
+.add-box{background:#111;padding:18px;border-radius:18px;margin-bottom:22px;color:#fff}
+.add-box h2{margin:0 0 12px;font-size:16px}
+.add-box input{background:#222;border-color:#333;color:#fff}
+.product{background:#fafafa;border:1px solid #eee;border-radius:16px;padding:14px;margin-bottom:12px;position:relative}
+.product h3{margin:0 0 4px;font-size:17px}
+.product p{margin:0;color:#666;font-size:14px}
+.del{position:absolute;top:10px;right:10px;background:#ff3b30;color:#fff;border:none;border-radius:8px;padding:7px 11px;font-size:12px;font-weight:700;cursor:pointer}
+.hidden{display:none}
+.small{font-size:13px;color:#888;text-align:center;margin-top:14px;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="card" id="loginCard">
+<h1>V16 SHOP</h1>
+<input id="user" placeholder="Username" value="211">
+<input id="pass" type="password" placeholder="Password" value="">
+<button class="btn" onclick="login()">Injira</button>
+<div class="small">admin / 1234 = Nyiri shop<br>211 / 211 = Umukiriya</div>
+</div>
+
+<div class="card hidden" id="shopCard">
+<div class="topbar">
+<div><span id="roleBadge" class="badge"></span> <span id="welcome" style="font-weight:700;margin-left:6px"></span></div>
+<div class="logout" onclick="logout()">Sohoka</div>
+</div>
+
+<div id="adminPanel" class="add-box hidden">
+<h2>➕ KUGURISHA - ADMIN ONLY</h2>
+<input id="pName" placeholder="Izina (ex: Inkweto)">
+<input id="pPrice" type="number" placeholder="Igiciro RWF (ex: 25000)">
+<input id="pDesc" placeholder="Ibisobanuro">
+<button class="btn" style="background:#fff;color:#000;margin-top:6px" onclick="addProduct()">Bika Igicuruzwa</button>
+</div>
+
+<h2 style="font-size:18px;margin:8px 0 12px">🛍️ Ibicuruzwa</h2>
+<div id="productList"></div>
+<div class="small" id="permInfo"></div>
+</div>
+
+<script>
+const ADMIN={u:'admin',p:'1234'};
+const USER={u:'211',p:'211'};
+let currentRole=null;
+
+function login(){
+  const u=document.getElementById('user').value.trim();
+  const p=document.getElementById('pass').value.trim();
+  if(u===ADMIN.u && p===ADMIN.p) currentRole='admin';
+  else if(u===USER.u && p===USER.p) currentRole='user';
+  else {alert('Username cyangwa password nabi!'); return;}
+  localStorage.setItem('v16_role',currentRole);
+  showShop();
+}
+function logout(){
+  localStorage.removeItem('v16_role');
+  currentRole=null;
+  document.getElementById('shopCard').classList.add('hidden');
+  document.getElementById('loginCard').classList.remove('hidden');
+}
+function showShop(){
+  document.getElementById('loginCard').classList.add('hidden');
+  document.getElementById('shopCard').classList.remove('hidden');
+  const badge=document.getElementById('roleBadge');
+  const adminPanel=document.getElementById('adminPanel');
+  const permInfo=document.getElementById('permInfo');
+  if(currentRole==='admin'){
+    badge.textContent='ADMIN'; badge.className='badge badge-admin';
+    document.getElementById('welcome').textContent='Nyiri Shop';
+    adminPanel.classList.remove('hidden');
+    permInfo.innerHTML='✅ Wemerewe kwongeramo no gusiba.<br>Abakiriya ntibabibona.';
+  }else{
+    badge.textContent='UMUKIRIYA 211'; badge.className='badge badge-user';
+    document.getElementById('welcome').textContent='Murakaza neza';
+    adminPanel.classList.add('hidden');
+    permInfo.textContent='👀 Ureba gusa - Ntiwemerewe kongeramo cyangwa gusiba.';
+  }
+  renderProducts();
+}
+function getProducts(){return JSON.parse(localStorage.getItem('v16_products_v2')||'[]')}
+function saveProducts(a){localStorage.setItem('v16_products_v2',JSON.stringify(a))}
+function addProduct(){
+  if(currentRole!=='admin'){alert('BIBUJIJWE! Admin wenyine niwe wemerewe kongeramo.'); return;}
+  const name=document.getElementById('pName').value.trim();
+  const price=document.getElementById('pPrice').value.trim();
+  const desc=document.getElementById('pDesc').value.trim();
+  if(!name||!price){alert('Shyiramo izina n\'igiciro!'); return;}
+  const arr=getProducts();
+  arr.unshift({id:Date.now(),name,price,desc,date:new Date().toLocaleString('rw-RW')});
+  saveProducts(arr);
+  document.getElementById('pName').value=''; document.getElementById('pPrice').value=''; document.getElementById('pDesc').value='';
+  renderProducts();
+}
+function deleteProduct(id){
+  if(currentRole!=='admin'){alert('BIBUJIJWE! Admin wenyine niwe usiba.'); return;}
+  if(!confirm('Urashaka gusiba koko?')) return;
+  let arr=getProducts().filter(p=>p.id!==id);
+  saveProducts(arr);
+  renderProducts();
+}
+function renderProducts(){
+  const list=document.getElementById('productList');
+  const arr=getProducts();
+  if(arr.length===0){list.innerHTML='<p style="color:#999;text-align:center;padding:24px">Nta gicuruzwa. Admin abishyiremo.</p>'; return;}
+  list.innerHTML=arr.map(p=>`
+    <div class="product">
+      <h3>${p.name}</h3>
+      <p>${p.desc||'Nta bisobanuro'} - <b>${p.price} RWF</b></p>
+      <div style="font-size:11px;color:#aaa;margin-top:4px">${p.date||''}</div>
+      ${currentRole==='admin'?`<button class="del" onclick="deleteProduct(${p.id})">Siba</button>`:''}
+    </div>
+  `).join('');
+}
+window.onload=()=>{
+  const saved=localStorage.getItem('v16_role');
+  if(saved){currentRole=saved; showShop();}
+}
+</script>
+</body>
+</html>
+---
