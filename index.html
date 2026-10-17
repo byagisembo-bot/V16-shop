@@ -2,140 +2,79 @@
 <!DOCTYPE html>
 <html lang="rw">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V16 SHOP - Admin Only Control</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V16 SHOP V2 - Full Admin</title>
 <style>
-*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body{margin:0;background:#f5f5f7;display:flex;justify-content:center;min-height:100vh}
-.card{background:white;width:100%;max-width:420px;margin:20px;padding:28px 22px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-h1{font-size:34px;text-align:center;margin:10px 0 28px;font-weight:900;letter-spacing:1px}
-input{width:100%;padding:16px 18px;border:2px solid #e5e5e5;border-radius:14px;font-size:18px;outline:none;margin-bottom:14px}
+:root{--black:#0a0a0a;--gray:#f4f4f5;--border:#e5e7eb;--red:#ef4444;--green:#10b981}
+*{box-sizing:border-box;font-family:system-ui;margin:0;padding:0}
+body{background:#f8f8f9;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:480px;background:#fff;min-height:100vh;position:relative;box-shadow:0 0 40px rgba(0,0,0,.06)}
+.header{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:10}
+.logo{font-weight:900;font-size:20px;letter-spacing:1px}
+.badge{padding:5px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.b-admin{background:#000;color:#fff}.b-user{background:#e5e7eb}
+.logout{color:#ef4444;font-weight:700;font-size:13px;cursor:pointer}
+.login-wrap{padding:40px 24px}
+.login-wrap h1{font-size:38px;font-weight:900;text-align:center;margin:20px 0 30px}
+input,select,textarea{width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:14px;font-size:15px;margin-bottom:12px;outline:none}
 input:focus{border-color:#000}
-.btn{width:100%;padding:16px;background:#000;color:#fff;border:none;border-radius:14px;font-size:19px;font-weight:700;cursor:pointer}
-.btn:active{transform:scale(.98)}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:800}
-.badge-admin{background:#000;color:#fff}
-.badge-user{background:#e8e8e8;color:#222}
-.logout{font-size:14px;color:#ff3b30;cursor:pointer;font-weight:700}
-.add-box{background:#111;padding:18px;border-radius:18px;margin-bottom:22px;color:#fff}
-.add-box h2{margin:0 0 12px;font-size:16px}
-.add-box input{background:#222;border-color:#333;color:#fff}
-.product{background:#fafafa;border:1px solid #eee;border-radius:16px;padding:14px;margin-bottom:12px;position:relative}
-.product h3{margin:0 0 4px;font-size:17px}
-.product p{margin:0;color:#666;font-size:14px}
-.del{position:absolute;top:10px;right:10px;background:#ff3b30;color:#fff;border:none;border-radius:8px;padding:7px 11px;font-size:12px;font-weight:700;cursor:pointer}
+.btn{width:100%;padding:15px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:700;font-size:16px;cursor:pointer}
+.btn-white{background:#fff;color:#000;border:2px solid #000}
+.tabs{display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid var(--border);overflow-x:auto;background:#fafafa;position:sticky;top:61px;z-index:9}
+.tab{padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;border:1px solid var(--border);background:#fff}
+.tab.active{background:#000;color:#fff;border-color:#000}
+.content{padding:16px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.stat{background:#f9fafb;border:1px solid var(--border);border-radius:16px;padding:14px}
+.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:#666}
+.card2{background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:12px;position:relative}
+.card2 img{width:100%;height:140px;object-fit:cover;border-radius:12px;margin-bottom:10px;background:#f3f3f3}
+.card2 h3{font-size:15px;margin-bottom:4px}.card2 p{font-size:13px;color:#666}
+.small{font-size:12px;color:#888;text-align:center;margin:10px 0}
+.del{position:absolute;top:12px;right:12px;background:#ef4444;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-size:11px;cursor:pointer;font-weight:700}
+.edit{position:absolute;top:12px;right:64px;background:#000;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-size:11px;cursor:pointer}
+.low{border-left:4px solid #ef4444}
 .hidden{display:none}
-.small{font-size:13px;color:#888;text-align:center;margin-top:14px;line-height:1.4}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 </style>
 </head>
 <body>
-<div class="card" id="loginCard">
-<h1>V16 SHOP</h1>
-<input id="user" placeholder="Username" value="211">
-<input id="pass" type="password" placeholder="Password" value="">
-<button class="btn" onclick="login()">Injira</button>
-<div class="small">admin / 1234 = Nyiri shop<br>211 / 211 = Umukiriya</div>
+<div class="app">
+<div class="header" id="header" style="display:none"><div class="logo">V16 SHOP V2</div><div style="display:flex;gap:10px;align-items:center"><span id="roleBadge" class="badge"></span><span class="logout" onclick="logout()">Sohoka</span></div></div>
+<div id="loginPage" class="login-wrap"><h1>V16 SHOP</h1><input id="u" placeholder="Username" value="211"><input id="p" type="password" placeholder="Password"><button class="btn" onclick="doLogin()">Injira</button><div class="small">Admin: admin / 1234<br>Client: 211 / 211<br><br>Full Admin App V2</div></div>
+<div id="adminApp" class="hidden"><div class="tabs" id="adminTabs"></div><div class="content" id="adminContent"></div></div>
+<div id="clientApp" class="hidden"><div class="tabs"><div class="tab active">🛍️ Shop</div><div class="tab" onclick="alert('Orders: '+getOrders().filter(o=>o.by==='211').length)">📦 My Orders</div></div><div class="content"><div id="clientGrid" class="shop-grid"></div><div class="small" id="clientInfo">Kanda ugure - Order ijya kuri Admin + WhatsApp</div></div></div>
 </div>
-
-<div class="card hidden" id="shopCard">
-<div class="topbar">
-<div><span id="roleBadge" class="badge"></span> <span id="welcome" style="font-weight:700;margin-left:6px"></span></div>
-<div class="logout" onclick="logout()">Sohoka</div>
-</div>
-
-<div id="adminPanel" class="add-box hidden">
-<h2>➕ KUGURISHA - ADMIN ONLY</h2>
-<input id="pName" placeholder="Izina (ex: Inkweto)">
-<input id="pPrice" type="number" placeholder="Igiciro RWF (ex: 25000)">
-<input id="pDesc" placeholder="Ibisobanuro">
-<button class="btn" style="background:#fff;color:#000;margin-top:6px" onclick="addProduct()">Bika Igicuruzwa</button>
-</div>
-
-<h2 style="font-size:18px;margin:8px 0 12px">🛍️ Ibicuruzwa</h2>
-<div id="productList"></div>
-<div class="small" id="permInfo"></div>
-</div>
-
 <script>
-const ADMIN={u:'admin',p:'1234'};
-const USER={u:'211',p:'211'};
-let currentRole=null;
-
-function login(){
-  const u=document.getElementById('user').value.trim();
-  const p=document.getElementById('pass').value.trim();
-  if(u===ADMIN.u && p===ADMIN.p) currentRole='admin';
-  else if(u===USER.u && p===USER.p) currentRole='user';
-  else {alert('Username cyangwa password nabi!'); return;}
-  localStorage.setItem('v16_role',currentRole);
-  showShop();
-}
-function logout(){
-  localStorage.removeItem('v16_role');
-  currentRole=null;
-  document.getElementById('shopCard').classList.add('hidden');
-  document.getElementById('loginCard').classList.remove('hidden');
-}
-function showShop(){
-  document.getElementById('loginCard').classList.add('hidden');
-  document.getElementById('shopCard').classList.remove('hidden');
-  const badge=document.getElementById('roleBadge');
-  const adminPanel=document.getElementById('adminPanel');
-  const permInfo=document.getElementById('permInfo');
-  if(currentRole==='admin'){
-    badge.textContent='ADMIN'; badge.className='badge badge-admin';
-    document.getElementById('welcome').textContent='Nyiri Shop';
-    adminPanel.classList.remove('hidden');
-    permInfo.innerHTML='✅ Wemerewe kwongeramo no gusiba.<br>Abakiriya ntibabibona.';
-  }else{
-    badge.textContent='UMUKIRIYA 211'; badge.className='badge badge-user';
-    document.getElementById('welcome').textContent='Murakaza neza';
-    adminPanel.classList.add('hidden');
-    permInfo.textContent='👀 Ureba gusa - Ntiwemerewe kongeramo cyangwa gusiba.';
-  }
-  renderProducts();
-}
-function getProducts(){return JSON.parse(localStorage.getItem('v16_products_v2')||'[]')}
-function saveProducts(a){localStorage.setItem('v16_products_v2',JSON.stringify(a))}
-function addProduct(){
-  if(currentRole!=='admin'){alert('BIBUJIJWE! Admin wenyine niwe wemerewe kongeramo.'); return;}
-  const name=document.getElementById('pName').value.trim();
-  const price=document.getElementById('pPrice').value.trim();
-  const desc=document.getElementById('pDesc').value.trim();
-  if(!name||!price){alert('Shyiramo izina n\'igiciro!'); return;}
-  const arr=getProducts();
-  arr.unshift({id:Date.now(),name,price,desc,date:new Date().toLocaleString('rw-RW')});
-  saveProducts(arr);
-  document.getElementById('pName').value=''; document.getElementById('pPrice').value=''; document.getElementById('pDesc').value='';
-  renderProducts();
-}
-function deleteProduct(id){
-  if(currentRole!=='admin'){alert('BIBUJIJWE! Admin wenyine niwe usiba.'); return;}
-  if(!confirm('Urashaka gusiba koko?')) return;
-  let arr=getProducts().filter(p=>p.id!==id);
-  saveProducts(arr);
-  renderProducts();
-}
-function renderProducts(){
-  const list=document.getElementById('productList');
-  const arr=getProducts();
-  if(arr.length===0){list.innerHTML='<p style="color:#999;text-align:center;padding:24px">Nta gicuruzwa. Admin abishyiremo.</p>'; return;}
-  list.innerHTML=arr.map(p=>`
-    <div class="product">
-      <h3>${p.name}</h3>
-      <p>${p.desc||'Nta bisobanuro'} - <b>${p.price} RWF</b></p>
-      <div style="font-size:11px;color:#aaa;margin-top:4px">${p.date||''}</div>
-      ${currentRole==='admin'?`<button class="del" onclick="deleteProduct(${p.id})">Siba</button>`:''}
-    </div>
-  `).join('');
-}
-window.onload=()=>{
-  const saved=localStorage.getItem('v16_role');
-  if(saved){currentRole=saved; showShop();}
-}
+const ADMIN={u:'admin',p:'1234'};const USERS_KEY='v16_v2_users';const PRODUCTS_KEY='v16_v2_products';const ORDERS_KEY='v16_v2_orders';let currentUser=null;let currentTab='dashboard';
+function defaultUsers(){return [{u:'admin',p:'1234',role:'admin',name:'Boss'},{u:'211',p:'211',role:'client',name:'Client 211'}]}
+function getUsers(){return JSON.parse(localStorage.getItem(USERS_KEY)||JSON.stringify(defaultUsers()))}
+function saveUsers(a){localStorage.setItem(USERS_KEY,JSON.stringify(a))}
+function getProducts(){return JSON.parse(localStorage.getItem(PRODUCTS_KEY)||'[]')}
+function saveProducts(a){localStorage.setItem(PRODUCTS_KEY,JSON.stringify(a))}
+function getOrders(){return JSON.parse(localStorage.getItem(ORDERS_KEY)||'[]')}
+function saveOrders(a){localStorage.setItem(ORDERS_KEY,JSON.stringify(a))}
+function doLogin(){const u=document.getElementById('u').value.trim();const p=document.getElementById('p').value.trim();const users=getUsers();const found=users.find(x=>x.u===u&&x.p===p);if(!found){alert('Login nabi!');return;}currentUser=found;localStorage.setItem('v16_v2_session',JSON.stringify(found));showApp();}
+function logout(){localStorage.removeItem('v16_v2_session');currentUser=null;document.getElementById('loginPage').classList.remove('hidden');document.getElementById('header').style.display='none';document.getElementById('adminApp').classList.add('hidden');document.getElementById('clientApp').classList.add('hidden');}
+function showApp(){document.getElementById('loginPage').classList.add('hidden');document.getElementById('header').style.display='flex';document.getElementById('roleBadge').textContent=currentUser.role.toUpperCase();document.getElementById('roleBadge').className='badge '+(currentUser.role==='admin'?'b-admin':'b-user');if(currentUser.role==='admin'){document.getElementById('adminApp').classList.remove('hidden');document.getElementById('clientApp').classList.add('hidden');renderAdminTabs();switchTab('dashboard');}else{document.getElementById('clientApp').classList.remove('hidden');document.getElementById('adminApp').classList.add('hidden');renderClient();}}
+function renderAdminTabs(){const tabs=[{id:'dashboard',label:'📊 Dashboard'},{id:'products',label:'📦 Stock'},{id:'orders',label:'🧾 Orders'},{id:'users',label:'👥 Users'},{id:'add',label:'➕ Ongeramo'}];document.getElementById('adminTabs').innerHTML=tabs.map(t=>`<div class="tab ${currentTab===t.id?'active':''}" onclick="switchTab('${t.id}')">${t.label}</div>`).join('');}
+function switchTab(id){currentTab=id;renderAdminTabs();const c=document.getElementById('adminContent');if(id==='dashboard')renderDashboard(c);else if(id==='products')renderProductsAdmin(c);else if(id==='orders')renderOrders(c);else if(id==='users')renderUsers(c);else if(id==='add')renderAddForm(c);}
+function renderDashboard(c){const prods=getProducts();const orders=getOrders();const totalValue=prods.reduce((s,p)=>s+(Number(p.sell||0)*Number(p.qty||0)),0);const low=prods.filter(p=>Number(p.qty||0)<=3);c.innerHTML=`<div class="stat-grid"><div class="stat"><span>Ibicuruzwa</span><b>${prods.length}</b></div><div class="stat"><span>Orders</span><b>${orders.length}</b></div><div class="stat"><span>Agaciro Total</span><b>${totalValue.toLocaleString()} RWF</b></div><div class="stat" style="${low.length?'background:#fff1f2':''}"><span>Low Stock</span><b>${low.length}</b></div></div>${low.length?`<div class="card2 low"><h3>⚠️ Bike</h3><p>${low.map(p=>p.name+' ('+p.qty+')').join(', ')}</p></div>`:''}<div class="card2"><h3>📈 Raporo</h3><p>Orders uyu munsi: ${orders.length}<br>Admin Only</p></div>`;}
+function renderProductsAdmin(c){const prods=getProducts();if(!prods.length){c.innerHTML='<p class="small">Nta gicuruzwa. Kanda ➕ Ongeramo.</p>';return}c.innerHTML=prods.map(p=>`<div class="card2 ${Number(p.qty)<=3?'low':''}">${p.img?`<img src="${p.img}" onerror="this.style.display='none'">`:''}<h3>${p.name}</h3><p>Igura: ${p.buy||0} | <b>${p.sell} RWF</b><br>Stock: <b>${p.qty}</b> | ${p.desc||''}</p><button class="edit" onclick="editProduct(${p.id})">Edit</button><button class="del" onclick="deleteProduct(${p.id})">Siba</button></div>`).join('');}
+function renderAddForm(c,edit=null){c.innerHTML=`<div class="card2" style="border:2px solid #000"><h3>${edit?'✏️ Hindura':'➕ Ongeramo'}</h3><br><input id="pn" placeholder="Izina *" value="${edit?edit.name:''}"><input id="pb" type="number" placeholder="Igura ex:15000" value="${edit?edit.buy:''}"><input id="ps" type="number" placeholder="Igurisha * ex:25000" value="${edit?edit.sell:''}"><input id="pq" type="number" placeholder="Stock * ex:10" value="${edit?edit.qty:''}"><input id="pi" placeholder="Image URL" value="${edit?edit.img:''}"><textarea id="pd" placeholder="Ibisobanuro">${edit?edit.desc||'':''}</textarea><div><button class="btn" onclick="${edit?`updateProduct(${edit.id})`:'createProduct()'}">${edit?'Bika Impinduka':'Bika'}</button></div>${edit?`<button class="btn btn-white" style="margin-top:8px" onclick="switchTab('products')">Cancel</button>`:''}</div>`;}
+function createProduct(){const name=document.getElementById('pn').value.trim();const buy=document.getElementById('pb').value.trim();const sell=document.getElementById('ps').value.trim();const qty=document.getElementById('pq').value.trim();const img=document.getElementById('pi').value.trim();const desc=document.getElementById('pd').value.trim();if(!name||!sell||!qty){alert('Izina, Igiciro, Stock!');return}const arr=getProducts();arr.unshift({id:Date.now(),name,buy,sell,qty,img,desc});saveProducts(arr);alert('Byabitswe!');switchTab('products');}
+function deleteProduct(id){if(!confirm('Gusiba?'))return;saveProducts(getProducts().filter(p=>p.id!==id));renderProductsAdmin(document.getElementById('adminContent'));}
+function editProduct(id){const p=getProducts().find(x=>x.id===id);if(!p)return;switchTab('add');setTimeout(()=>renderAddForm(document.getElementById('adminContent'),p),50);}
+function updateProduct(id){const name=document.getElementById('pn').value.trim();const buy=document.getElementById('pb').value.trim();const sell=document.getElementById('ps').value.trim();const qty=document.getElementById('pq').value.trim();const img=document.getElementById('pi').value.trim();const desc=document.getElementById('pd').value.trim();let arr=getProducts();let idx=arr.findIndex(x=>x.id===id);if(idx>-1){arr[idx]={...arr[idx],name,buy,sell,qty,img,desc};saveProducts(arr);switchTab('products');}}
+function renderOrders(c){const orders=getOrders();if(!orders.length){c.innerHTML='<p class="small">Nta order. Abakiriya nibagura zizaza hano.</p>';return}c.innerHTML=orders.map(o=>`<div class="card2"><h3>${o.product} - ${o.price} RWF</h3><p>Client: <b>${o.by}</b><br>Status: <b>${o.status}</b><br>${o.date}</p><div style="display:flex;gap:6px;margin-top:8px"><button style="flex:1;padding:8px;border-radius:8px;border:none;background:#000;color:#fff;font-weight:700" onclick="updateOrder(${o.id},'Approved')">Emeza</button><button style="flex:1;padding:8px;border-radius:8px;border:none;background:#e5e7eb" onclick="updateOrder(${o.id},'Delivered')">Delivered</button><button style="flex:1;padding:8px;border-radius:8px;border:none;background:#fee2e2;color:#b91c1c" onclick="deleteOrder(${o.id})">Siba</button></div></div>`).join('');}
+function updateOrder(id,s){let arr=getOrders();let i=arr.findIndex(o=>o.id===id);if(i>-1){arr[i].status=s;saveOrders(arr);renderOrders(document.getElementById('adminContent'));}}
+function deleteOrder(id){saveOrders(getOrders().filter(o=>o.id!==id));renderOrders(document.getElementById('adminContent'));}
+function renderUsers(c){const users=getUsers();c.innerHTML=`<div class="card2"><h3>👥 Users</h3></div>${users.map(u=>`<div class="card2"><h3>${u.name} (${u.u})</h3><p>Role: <b>${u.role}</b> | Pass: ${u.p}</p>${u.u!=='admin'?`<button class="del" onclick="removeUser('${u.u}')">Siba</button>`:''}</div>`).join('')}<div class="card2" style="margin-top:16px"><h3>➕ User</h3><input id="uu" placeholder="Username"><input id="up" placeholder="Password"><select id="ur"><option value="client">Client</option><option value="admin">Admin</option></select><button class="btn" onclick="addUser()">Bika</button></div>`;}
+function addUser(){const u=document.getElementById('uu').value.trim();const p=document.getElementById('up').value.trim();const r=document.getElementById('ur').value;if(!u||!p){alert('username na password');return}let arr=getUsers();if(arr.find(x=>x.u===u)){alert('Urisanzweho');return}arr.push({u,p,role:r,name:u});saveUsers(arr);renderUsers(document.getElementById('adminContent'));}
+function removeUser(u){if(u==='admin')return;saveUsers(getUsers().filter(x=>x.u!==u));renderUsers(document.getElementById('adminContent'));}
+function renderClient(){const prods=getProducts();const grid=document.getElementById('clientGrid');if(!prods.length){grid.innerHTML='<p class="small">Nta gicuruzwa.</p>';return}grid.innerHTML=prods.map(p=>`<div class="card2" onclick="buyProduct(${p.id})">${p.img?`<img src="${p.img}" onerror="this.style.display='none'">`:''}<h3>${p.name}</h3><p>${p.desc||''}</p><p style="margin-top:6px"><b>${p.sell} RWF</b></p><button class="btn" style="margin-top:8px;padding:10px;font-size:13px">Gura</button></div>`).join('');}
+function buyProduct(id){const p=getProducts().find(x=>x.id===id);if(!p)return;const orders=getOrders();orders.unshift({id:Date.now(),product:p.name,price:p.sell,by:currentUser.u,status:'Pending',date:new Date().toLocaleString()});saveOrders(orders);const wa=`https://wa.me/250788000000?text=Ndashaka%20${encodeURIComponent(p.name)}%20-%20${p.sell}%20RWF`;if(confirm(`Order ya ${p.name} yakiriwe! Wohereze kuri WhatsApp?`)){window.open(wa,'_blank')}}
+window.onload=()=>{const s=localStorage.getItem('v16_v2_session');if(s){currentUser=JSON.parse(s);showApp();}if(!localStorage.getItem(PRODUCTS_KEY)){saveProducts([{id:1,name:'V16 T-Shirt',buy:'15000',sell:'25000',qty:'12',img:'',desc:'Original V16'},{id:2,name:'Inkweto',buy:'20000',sell:'35000',qty:'3',img:'',desc:'Size 42'}]);}}
 </script>
 </body>
 </html>
----
